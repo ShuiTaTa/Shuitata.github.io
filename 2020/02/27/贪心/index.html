@@ -6,7 +6,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    时间复杂度 |  水獭獭
+    贪心 |  水獭獭
   </title>
   <meta name="generator" content="hexo-theme-yilia-plus">
   
@@ -31,7 +31,7 @@
   <div id="app">
     <main class="content">
       <section class="outer">
-  <article id="post-时间复杂度" class="article article-type-post" itemscope
+  <article id="post-贪心" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -39,7 +39,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  时间复杂度
+  贪心
 </h1>
   
 
@@ -48,8 +48,8 @@
 
     
     <div class="article-meta">
-      <a href="/2020/02/27/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" class="article-date">
-  <time datetime="2020-02-27T02:50:35.000Z" itemprop="datePublished">2020-02-27</time>
+      <a href="/2020/02/27/%E8%B4%AA%E5%BF%83/" class="article-date">
+  <time datetime="2020-02-27T03:38:00.000Z" itemprop="datePublished">2020-02-27</time>
 </a>
       
       
@@ -59,7 +59,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">1.7k字</span>
+            <span class="post-count">1.5k字</span>
         </span>
     </span>
 
@@ -68,7 +68,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">6分钟</span>
+            <span class="post-count">5分钟</span>
         </span>
     </span>
 </div>
@@ -95,47 +95,65 @@
       
 
       
-      <h1 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为了在之后比较算法性能的时候“有法可依”，今天将为大家简单介绍时间复杂度。</p>
-<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>看懂本篇文章并不需要任何前置知识。</p>
-<h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>为了让大家初步认识时间复杂度，我们先来看个很老的例子：</p>
+      <h1 id="贪心"><a href="#贪心" class="headerlink" title="贪心"></a>贪心</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>今天，将为大家简单介绍”贪心算法“。</p>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>$C++$语法知识。</p>
+<h2 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h2><p>我们先来看一个简单的例题：</p>
 <blockquote>
-<p>在高斯七岁那年，他的数学老师给同学们布置了一道加法题：$1+2+3+\cdots+100$，结果高斯立马算出了结果，原来是因为高斯使用了一种更快速的办法：$\frac{(首项+末项)\times项数}{2}$，这个式子后来就被称为等差数列求和公式。</p>
+<p>给定$n$个数组，每个数组里面有$m$个数，要求从每个数组里面分别选出$1$个数，使得选出的$n$个数总和最大。</p>
 </blockquote>
-<p>显然，高斯的计算方法比傻傻地一个一个加起来要快得多，这个时候，我们就可以说高斯的计算方法具有更优秀的“快速性”。但是，这里的“优秀”只是我们的感性认识罢了，有没有更为科学的表述呢？能不能用更严谨的方式来衡量“快速性”呢？</p>
-<h2 id="时间复杂度-1"><a href="#时间复杂度-1" class="headerlink" title="时间复杂度"></a>时间复杂度</h2><blockquote>
-<p>在计算机科学中，算法的<strong>时间复杂度</strong>是一个函数，它定性描述<strong>该算法的运行时间</strong>。这是一个代表算法输入值的字符串的长度的函数。时间复杂度常用大O符号表述，不包括这个函数的低阶项和首项系数。使用这种方式时，时间复杂度可被称为是渐近的，即仅考察输入值大小<strong>趋近无穷时</strong>的情况。</p>
+<p>这个例题的正解很显然：我们只要保证<strong>选的每个数都是所在数组的最大值</strong>就好了，换句话说，我们保证<strong>每次决策时都采取当前情况下的最优决策</strong>就可以了，这也正是贪心算法的含义。</p>
+<p>接下来，我们来看几个简单的实例：</p>
+<h2 id="简单实例"><a href="#简单实例" class="headerlink" title="简单实例"></a>简单实例</h2><h3 id="最优装载"><a href="#最优装载" class="headerlink" title="最优装载"></a>最优装载</h3><blockquote>
+<p>给定$m$个物品，第$i$个物品的重量是$w_i$，问在保证重量不超过$k$的情况下，<strong>最多</strong>能拿走几个物品？</p>
 </blockquote>
-<p>嗯上面就是百度百科关于时间复杂度的定义，很显然这个定义对现在的我们来说还是太抽象了一些，我们不妨再来看一个例子：</p>
-<blockquote>
-<p>有一天，凶残的铁老师心血来潮地给老姜和帆帆布置了一个作业：<strong>在一串有序的数列中找出一个特定的数的位置</strong>，比如说给定数列$A:1,12,32,54,234,5342,6547,7636,94842$，和一个特定的数：$K=54$，很显然我们可以看出$K$的位置为$4$。</p>
+<h5 id="策略："><a href="#策略：" class="headerlink" title="策略："></a>策略：</h5><p>优先取轻的。</p>
+<h3 id="可切分最优装载"><a href="#可切分最优装载" class="headerlink" title="可切分最优装载"></a>可切分最优装载</h3><blockquote>
+<p>给定$m$个物品，第$i$个物品的重量是$m$，价值为$v$，物品可以被切割，切割后的物品价值按重量比进行计算（$\Large\frac{v_前}{m_前}=\frac{v_后}{m_后}$），问在保证物品重量不超过$k$的情况下，<strong>最多</strong>带走多大总价值的物品？</p>
 </blockquote>
-<p>下面是老姜给出的算法：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">读入数列</span><br><span class="line">读入数k</span><br><span class="line"></span><br><span class="line">定义 当前位数 = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">循环 &#123;</span><br><span class="line">    判断 当前位数 的数字是否等于 k</span><br><span class="line">        若 等于：</span><br><span class="line">        	输出 当前位数</span><br><span class="line">        	退出循环</span><br><span class="line">        若 不等于：</span><br><span class="line">        	当前位数+<span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>下面是帆帆给出的算法：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">读入数列</span><br><span class="line">读入数k</span><br><span class="line"></span><br><span class="line">定义 当前查找区间左端等于 <span class="number">1</span></span><br><span class="line">定义 当前查找区间右端等于 数列位数n</span><br><span class="line"></span><br><span class="line">循环 &#123;</span><br><span class="line">    定义 mid = 当前查找区间中点所在数的值</span><br><span class="line">    判断 k 是否大于 mid</span><br><span class="line">        若 大于：</span><br><span class="line">        	当前查找区间左端 = mid</span><br><span class="line">        若 小于：</span><br><span class="line">        	当前查找区间右端 = mid</span><br><span class="line">        若 等于：</span><br><span class="line">        	输出 mid</span><br><span class="line">        	瑞出循环</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>简单来说，老姜的算法是挨个查找，从数列的第一位一直查找到数列的最后一位，直到找到$k$；而帆帆的算法是折半查找，利用数列有序的性质，每一次比较之后都会排除掉一半的查找区间</p>
-<p>那么怎么比较这两种算法的优劣呢？很简单，看看在最坏情况下语句一共需要运行多少次。<a href="此处取最坏时间复杂度的定义">^1</a></p>
-<p>比如说，在这两个算法中，若数列长度为$n$，在最坏情况下，老姜的算法一共要运行$n$次读入语句来读入数列，运行$n$次判断语句来找出$k$，运行$1$次输出语句来输出结果，运行次数可以记为$T_1(n)$，$T_1(n)=n+n+1$；</p>
-<p>而帆帆的算法一共要运行$n$次读入语句来读入数列，运行$\log_{2}n$次判断语句，运行$1$次输出语句来输出结果，运行次数可以记为$T_2(n)$，$T_2(n)=n+\log_{2}n+1$。</p>
-<p>实际上，我们可以发现，不管是帆帆的算法还是老姜的算法，输入和输出部分其实时相同的，换句话说，我们珍重关心的其实是中间的查找部分，所以我们可以粗略地转化一下，$T_1(n)=n$，$T_2(n)=\log_{2}n$</p>
-<p>而当数据规模$n$趋近于$+\infty$时，显然帆帆的算法要优于老姜的算法，因此，帆帆的算法具有更优秀的时间复杂度。</p>
-<h2 id="大-O-记法"><a href="#大-O-记法" class="headerlink" title="大$O$记法"></a>大$O$记法</h2><blockquote>
-<p>算法的时间复杂度记作：$T(n)=O(f(n))$。它表示随问题规模$n$的增大，算法执行时间的增长率和$f(n)$的增长率相同，称作算法的渐进时间复杂度，简称为时间复杂度。其中，$f(n)$是问题规模$n$的某个函数。</p>
+<h5 id="策略：-1"><a href="#策略：-1" class="headerlink" title="策略："></a>策略：</h5><p>优先取性价比高的（$\frac{v}{m}$尽可能大）。</p>
+<h3 id="乘船问题"><a href="#乘船问题" class="headerlink" title="乘船问题"></a>乘船问题</h3><blockquote>
+<p>有$n$个人，第$i$个人重量为$w_i$，有一艘船，这艘船最多可乘两个人，问在保证船上两人总重不超过$k$的情况下，<strong>最少</strong>需要运几次才能带走所有人？</p>
 </blockquote>
-<p>比如，$T(n)=2n^2+5n+1$，当$n$趋近于$+\infty$时，常数与低次项对$T(n)$的影响已经微乎其微了，我们就可以记作$T(n)=O(n^2)$<a href="此处表述略不严谨，严谨定义请参考《算法导论》">^2</a></p>
-<p>至此，在科普意义上的时间复杂度我们已经了解了，接下来的内容可能就需要一些编程知识了。</p>
-<h2 id="典型时间复杂度分析"><a href="#典型时间复杂度分析" class="headerlink" title="典型时间复杂度分析"></a>典型时间复杂度分析</h2><h3 id="常数时间"><a href="#常数时间" class="headerlink" title="常数时间"></a>常数时间</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//求从j到k所有自然数的和</span></span><br><span class="line"><span class="keyword">int</span> j,k;</span><br><span class="line"><span class="built_in">cin</span>&gt;&gt;j&gt;&gt;k;</span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;(j+k)*(k-j+<span class="number">1</span>)/<span class="number">2</span>&lt;&lt;<span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
-
-<p>显然，对于这段代码，$T(n)$与$n$无关，其上界为一个特定的值，我们便称这样的算法的时间复杂度为常数时间，记作$T(n)=O(1)$。</p>
-<h3 id="线性时间"><a href="#线性时间" class="headerlink" title="线性时间"></a>线性时间</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//求从j到k所有自然数的和</span></span><br><span class="line"><span class="keyword">int</span> j,k;</span><br><span class="line"><span class="built_in">cin</span>&gt;&gt;j&gt;&gt;k;</span><br><span class="line"><span class="keyword">int</span> ans=<span class="number">0</span>;<span class="comment">//answer</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=j; i&lt;=k; ++i) &#123;</span><br><span class="line">    ans+=i;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;ans&lt;&lt;<span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
-
-<p>显然，对于这段代码，循环部分是复杂度最高的，而循环中的语句最多被执行$n$次，因此$T(n)$随$n$线性增长，我们便称这样的算法的时间复杂度为线性时间复杂度，记作$T(n)=O(n)$。</p>
-<h3 id="平方时间"><a href="#平方时间" class="headerlink" title="平方时间"></a>平方时间</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//编不出来了</span></span><br><span class="line"><span class="keyword">int</span> n;</span><br><span class="line"><span class="built_in">cin</span>&gt;&gt;n;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;=n; ++i) &#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>; j&lt;=n; ++j) &#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">"hello world!"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>同理，我们来观察循环部分，$i$每自增一次，$j$都会自增$n$次，循环体也就会被执行$n$次，而$i$一共会自增$n$次，也就是说循环体一共会被执行$n\times n=n^2$次，因此，$T(n)$与$n^2$线性相关，我们便称这样的算法的时间复杂度为平方时间复杂度，记作$T(n)=O(n^2)$。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此，我们已经简单地了解了时间复杂度的定义、大$O$记号、以及一些常见的时间复杂度，但是，受制于笔者本身的水平限制，尽管经过了仔细地校对，本篇文章仍有可能出现一些疏漏与问题，欢迎大家批评与指正。最后，如果大家想要更深入地认识时间复杂度，推荐阅读《算法导论》[坏笑]</p>
+<h5 id="策略：-2"><a href="#策略：-2" class="headerlink" title="策略："></a>策略：</h5><p>最轻的人$i$与可行范围内最重的人$j$配对。</p>
+<h5 id="正确性证明："><a href="#正确性证明：" class="headerlink" title="正确性证明："></a>正确性证明：</h5><p>考虑使用反证法，假设这个策略不是最优，那么与$i$同船的人有两种情况：</p>
+<ul>
+<li><p>$i$不和任何人同船。那么这个时候我们就可以安派$j$与$i$同船，此时总次数一定不会增加，说明我们的策略不会更坏。</p>
+</li>
+<li><p>$i$和比$j$更轻的$k$同船。那么我们这个时候可以交换$j$和$k$，显然，交换后这两艘船都肯定不会超重，因此总次数也绝不会增加，说明我们的贪心策略不会更坏。</p>
+<p>由此可见，假设并不存在，因为并不存在我们的贪心策略之外的最优解，贪心的正确性得到了证明。</p>
+</li>
+</ul>
+<h2 id="进阶实例"><a href="#进阶实例" class="headerlink" title="进阶实例"></a>进阶实例</h2><p>$tips:$接下来的内容可能会稍有难度，在草稿纸上写写画画能够帮助思考。</p>
+<h3 id="选择不相交区间"><a href="#选择不相交区间" class="headerlink" title="选择不相交区间"></a>选择不相交区间</h3><blockquote>
+<p>给定$n$个开区间($a_i$,$b_i$)，要求选择<strong>尽量多</strong>的区间，并且这些区间两两没有公共点。</p>
+</blockquote>
+<h5 id="策略：-3"><a href="#策略：-3" class="headerlink" title="策略："></a>策略：</h5><p>按照<strong>结束时间从小到大</strong>排序，依次考虑各个区间，如果没有和已选区间冲突就选，否则不选。</p>
+<h5 id="正确性证明：-1"><a href="#正确性证明：-1" class="headerlink" title="正确性证明："></a>正确性证明：</h5><p>假设存在两区间$(a_1,b_1),(a_2,b_2)$，两区间均不与之前所选区间冲突，且$b_1&lt;b_2$，依照贪心策略，当前选择$(a_1,b_1)$。</p>
+<ul>
+<li>若$(a_1,b_1)$与$(a_2,b_2)$不冲突，则之后仍还可以选择$(a_2,b_2)$；</li>
+<li>若$(a_1,b_1)$与$(a_2,b_2)$冲突，因为$b_1&lt;b_2$，所以$(a_1,b_1)$对之后的影响更小。</li>
+</ul>
+<p>由此可见，贪心策略更优。</p>
+<h5 id="练习"><a href="#练习" class="headerlink" title="练习"></a>练习</h5><p>$LOJ \ $  #$10000$  <a href="https://loj.ac/problem/10000" target="_blank" rel="noopener"><strong>活动安排</strong></a></p>
+<h3 id="区间选点"><a href="#区间选点" class="headerlink" title="区间选点"></a>区间选点</h3><blockquote>
+<p>给定$n$个闭区间$[a_i,b_i]$，在数轴上选<strong>尽量少</strong>的点，使得每个区间内都至少有一个点（不同区间内的点可以是同一个）</p>
+</blockquote>
+<h5 id="策略：-4"><a href="#策略：-4" class="headerlink" title="策略："></a>策略：</h5><p>首先按照<strong>区间右端点从小到大</strong>排序，然后依次考虑，如果该区间内没有点，则选取该区间末尾的点。</p>
+<h5 id="正确性说明："><a href="#正确性说明：" class="headerlink" title="正确性说明："></a>正确性说明：</h5><p>为了让选的点尽量少，就应该让尽可能多的区间<strong>共用</strong>同一个点，而将点选在右端点能够尽可能多地让更多区间共用该点。</p>
+<h5 id="练习-1"><a href="#练习-1" class="headerlink" title="练习"></a>练习</h5><p>$LOJ \ $  #$10001$  <a href="https://loj.ac/problem/10001" target="_blank" rel="noopener"><strong>种树</strong></a></p>
+<h3 id="区间覆盖问题"><a href="#区间覆盖问题" class="headerlink" title="区间覆盖问题"></a>区间覆盖问题</h3><blockquote>
+<p>给定$n$个闭区间$[a_i,b_i]$，要求选择<strong>尽量少</strong>的区间覆盖一条指定的线段$[s,t]$。</p>
+</blockquote>
+<h5 id="策略：-5"><a href="#策略：-5" class="headerlink" title="策略："></a>策略：</h5><p>首先按照<strong>区间左端点从小到大排序</strong>，然后从左到右考察该线段，如果线段上的某一点$s$没有被覆盖，则选取能够覆盖$s$的区间中<strong>右端点坐标最大</strong>的一个，并将$s$更新为该区间的右端点坐标，直到$t$也被覆盖。若存在点$s$不能被覆盖，则说明问题无解。</p>
+<h5 id="正确性说明：-1"><a href="#正确性说明：-1" class="headerlink" title="正确性说明："></a>正确性说明：</h5><p>为让区间尽可能少，必须要让每一个区间尽可能大，所以选择右端点坐标最大的一个。</p>
+<h5 id="练习-2"><a href="#练习-2" class="headerlink" title="练习"></a>练习</h5><p>$LOJ \ $  #$10002  <a href="https://loj.ac/problem/10002" target="_blank" rel="noopener"><strong>喷水装置</strong></a></p>
+<h2 id="挑战实例"><a href="#挑战实例" class="headerlink" title="挑战实例"></a>挑战实例</h2><p>下面这个实例很常见，甚至笔者在数学考试中就见过这种题，为了让大家充分思考将<strong>不再给出贪心策略与证明</strong>。</p>
+<h3 id="流水作业调度问题"><a href="#流水作业调度问题" class="headerlink" title="流水作业调度问题"></a>流水作业调度问题</h3><blockquote>
+<p>给定$n$个作业，要在$2$台机器上$M_1$和$M_2$组成的流水线上完成加工。每个作业$i$加工的顺序都是<strong>先在$M_1$上加工，后在$M_2$上加工</strong>。在两台机器上加工的时间分别为$a_i$和$b_i$。 要求确定这n个作业的加工顺序，使得从第一个作业在$M_1$上开始加工，到最后一个作业在$M_2$上完成加工所需要的时间<strong>最少</strong>。 </p>
+</blockquote>
+<p>大家思考完毕之后，可以百度搜索$“Johnson算法”$核对答案哦。</p>
+<h5 id="练习-3"><a href="#练习-3" class="headerlink" title="练习"></a>练习</h5><p>$LOJ \ $  #$10003$  <a href="https://loj.ac/problem/10003" target="_blank" rel="noopener"><strong>加工生产调度</strong></a></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>至此，我们已经简单了解了“贪心算法”，还见到了一些贪心的经典实例，受制于笔者本身的水平限制，尽管经过了仔细地校对，本篇文章仍有可能出现一些疏漏与问题，欢迎大家批评与指正。最后，如果大家想要更深入地认识“贪心算法”，推荐阅读<strong><u>《信息学奥赛一本通·提高篇》</u></strong>[坏笑]</p>
 
       
       <!-- reward -->
@@ -201,7 +219,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2020/02/27/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2020/02/27/%E8%B4%AA%E5%BF%83/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -219,19 +237,10 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/02/27/%E8%B4%AA%E5%BF%83/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            贪心
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/02/27/hello/" class="article-nav-link">
+      <a href="/2020/02/27/%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">hello</div>
+        <div class="article-nav-title">时间复杂度</div>
       </a>
     
   </nav>
